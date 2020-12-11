@@ -1,16 +1,27 @@
 <?php
-include 'at6_header.php';
+    include 'AT06_header.php';
+    session_start();
+    if(!isset($_SESSION['logado'])){
+        header('Location: restrict.php');
+    }
 ?>
+
+<div class="tabela-container">
+<div class="divcadastro">
+    <a href="AT06_consulta.php" class="botaocadastro">Voltar</a>
+</div>
+<div class="formularios">
 <h1>Resultado da Consulta</h1>
     <?php
     //consulta ao banco de dados
     if(isset($_POST['cons'])){
         $valor = $_POST['id'];
         $valor2 = $_POST['decres'];
-        $consulta = $_POST['pesquisa'];
+        $consulta = $_POST['search'];
         $s = "sim";
         $n = "nao";
         $d = "dec";
+
         echo "<table>
                 <tr>
                     <th>ID</th>
@@ -167,7 +178,37 @@ include 'at6_header.php';
             echo "<h2 class='consulta'>Falha na exclusão do registro</h2>";
         }
     }
+
+    //cadastro de clientes
+    if(isset($_POST['cad'])){
+    
+        $sql = "INSERT INTO db_clientes (nome,endereco,bairro,cidade,estado,telCel) 
+        VALUES ('Steve R Peralez','Edgewood Avenue','Fresno','California','CA','5592684454'),
+        ('Emely K Reece','Edwards Street','Rock Mount','North Carolina','NC','2527745079'),
+        ('John D Makowski','River Road','Colorado Springs','Colorado','CO','7193931032'),
+        ('Robert K Davis','Evergreen Lane','Lone Tree','Iowa','IA','3235963047'),
+        ('Dora M Butters','Swick Hill Street','New Orleans','Louisiana','LA','9852437103'),
+        ('Shirley J Smith','goldcliff Circle','Washington','Washington DC','DC','2026242179')";
+        
+        if(mysqli_query($conn,$sql)){
+            echo "<h2>Clientes cadastrados com sucesso!</h2>";
+        }
+        else{
+            echo "<h2>Erro ao inserir clientes! Erro: ".mysqli_error($conn)."</h2>";
+        }
+    }
+    //logout do sistema
+
+    if(isset($_POST['logout'])){
+        session_start();
+        session_unset();
+        session_destroy();
+
+        header('Location: index.php');
+    }
     mysqli_close($conn);
-?>   
+?>
+</div>
+</div>    
 </body>
 </html>
